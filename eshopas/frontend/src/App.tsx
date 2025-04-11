@@ -6,6 +6,8 @@ import Cart from "./Components/Cart";
 import Order from "./Components/Order";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
+import 'bootstrap/dist/css/bootstrap.min.css';
+ import './index.css';
 
 
 function App()  {
@@ -16,7 +18,7 @@ function App()  {
                     <main>
                         <Routes>
                             <Route path="/"  element={<Home />} />
-                            <Route path={"/product"} element={<Product/>} />
+                            <Route path={"/product/:id"} element={<Product/>} />
                             <Route path={"/cart"} element={<Cart/>}></Route>
                             <Route path={"/order"} element={<Order/>}></Route>
                             <Route path={"/login"} element={<Login/>}></Route>
