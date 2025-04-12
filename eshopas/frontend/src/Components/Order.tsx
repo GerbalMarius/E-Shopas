@@ -7,13 +7,9 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import { BACKEND_PREFIX } from "../App";
+import {BACKEND_PREFIX, CartItem} from "../App";
 
-interface CartItem {
-    name: string;
-    price: number;
-    quantity: number;
-}
+
 
 const stripePromise = loadStripe('pk_test_51RCxrYP1iMohmZdgBqsvXzyv6vehxRTEhm1uRmodHcWaDAwDJ2yf5pcqPVb3ORrMA5kijg9LFk3xdfjmqFL5SjBC00gNHWLaRF');
 

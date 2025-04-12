@@ -9,6 +9,12 @@ import Register from "./Components/Register";
 import 'bootstrap/dist/css/bootstrap.min.css';
  import './index.css';
 
+export interface CartItem {
+    name: string;
+    price: number;
+    quantity: number;
+}
+
 export const BACKEND_PREFIX:string = 'http://localhost:8080';
 function App()  {
     return (
