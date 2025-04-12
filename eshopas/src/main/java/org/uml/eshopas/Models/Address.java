@@ -27,7 +27,7 @@ public final class Address {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private City city;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "address")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "deliveryAddress")
     private Collection<Order> orders;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
