@@ -48,5 +48,7 @@ public final class Product {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
-
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Manufacturer manufacturer;
 }

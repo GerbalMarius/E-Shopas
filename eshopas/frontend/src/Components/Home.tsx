@@ -78,30 +78,30 @@ const Home = () => {
             </Navbar>
 
             <div className="page-wrapper">
-            <div className="page-content home-container">
-                <section className="hero">
-                    <h1>Welcome to E-Shop</h1>
-                    <p>Discover amazing products and exclusive deals.</p>
-                </section>
+                <div className="page-content home-container">
+                    <section className="hero">
+                        <h1>Welcome to E-Shop</h1>
+                        <p>Discover amazing products and exclusive deals.</p>
+                    </section>
 
-                <section className="product-grid">
-                    <h2>Categories</h2>
-                    <div className="category-grid">
-                        {actualCategories.length > 0 ? (
-                            actualCategories.map((category) => (
-                                <div key={category.id.toString()} className="category-card">
-                                    <Link to={`/category/${category.id}`} className="text-decoration-none text-dark">
-                                        <h5>{category.title}</h5>
-                                        <p>{category.description}</p>
-                                    </Link>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No categories available.</p>
-                        )}
-                    </div>
-                </section>
-            </div>
+                    <section className="product-grid">
+                        <h2>Categories</h2>
+                        <div className="category-grid">
+                            {actualCategories.length > 0 ? (
+                                actualCategories.map((category) => (
+                                    <div key={category.id.toString()} className="category-card">
+                                        <Link to={`/category/${category.id}`} className="text-decoration-none text-dark">
+                                            <h5>{category.title}</h5>
+                                            <p>{category.description}</p>
+                                        </Link>
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No categories available.</p>
+                            )}
+                        </div>
+                    </section>
+                </div>
             </div>
 
             <footer style={{ padding: '20px', textAlign: 'center', background: '#eee' }}>
