@@ -1,4 +1,4 @@
-import {Link, NavigateFunction, useNavigate} from "react-router-dom";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import {
     Navbar,
     NavbarBrand,
@@ -8,14 +8,15 @@ import {
     NavItem,
     NavLink
 } from "reactstrap";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
-import {BACKEND_PREFIX} from "../App";
+import { BACKEND_PREFIX } from "../App";
 
-interface Category {
-    id : bigint
-    description : string
-    title : string
+interface Product {
+    id: number; // Using number instead of bigint to avoid issues
+    name: string;
+    price: number;
+    pictureBase64?: string; // Base64 encoded picture string
 }
 
 const Home = () => {
@@ -24,21 +25,21 @@ const Home = () => {
 
     const navigate: NavigateFunction = useNavigate();
 
-    const [categories, setCategories] = React.useState<Category[] | null>([]);
+    const [products, setProducts] = React.useState<Product[] | null>([]);
 
     useEffect(() => {
         const contr = new AbortController();
 
         (async () => {
             try {
-                const response = await axios.get<Category[]>(
-                    `${BACKEND_PREFIX}/api/product/categories`,
+                const response = await axios.get<Product[]>(
+                    `${BACKEND_PREFIX}/api/product/products`,
                     { signal: contr.signal }
                 );
-                setCategories(response.data);
+                setProducts(response.data);
             } catch (err) {
                 if (!contr.signal.aborted) {
-                    setCategories([]); // set to empty array or null as fallback
+                    setProducts([]); // set to empty array or null as fallback
                     navigate("/");
                 }
             }
@@ -46,7 +47,9 @@ const Home = () => {
 
         return () => contr.abort();
     }, [navigate]);
-    const actualCategories = categories ?? []
+
+    const actualProducts = products ?? [];
+
     return (
         <>
             <Navbar className="navbar-custom" expand="md">
@@ -85,24 +88,34 @@ const Home = () => {
                     </section>
 
                     <section className="product-grid">
-                        <h2>Categories</h2>
-                        <div className="category-grid">
-                            {actualCategories.length > 0 ? (
-                                actualCategories.map((category) => (
-                                    <div key={category.id.toString()} className="category-card">
-                                        <Link to={`/category/${category.id}`} className="text-decoration-none text-dark">
-                                            <h5>{category.title}</h5>
-                                            <p>{category.description}</p>
-                                        </Link>
+                        {actualProducts.length > 0 ? (
+                            actualProducts.map((product) => (
+                                <Link key={product.id.toString()} to={`/product/${product.id}`} className="text-decoration-none text-dark">
+                                    <div className="product-card">
+                                        <img
+                                            src={
+                                                product.pictureBase64
+                                                    ? `data:image/jpeg;base64,${product.pictureBase64}`
+                                                    : '/default-product.jpg'
+                                            }
+                                            alt={product.name}
+                                            className="product-image"
+                                        />
+                                        <h5>{product.name}</h5>
+                                        <p>{product.price.toFixed(2)}€</p>
                                     </div>
-                                ))
-                            ) : (
-                                <p>No categories available.</p>
-                            )}
-                        </div>
+                                </Link>
+                            ))
+                        ) : (
+                            <p>No products available.</p>
+                        )}
                     </section>
                 </div>
             </div>
+            <h2>Products</h2>
+            <Link to="/add-product">
+                <button className="btn btn-success mb-3">Add Product</button>
+            </Link>
 
             <footer style={{ padding: '20px', textAlign: 'center', background: '#eee' }}>
                 © 2025 E-Shop
