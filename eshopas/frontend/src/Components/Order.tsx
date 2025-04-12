@@ -31,9 +31,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
 
     useEffect(() => {
         axios
-            .post("http://localhost:8080/api/order/payment-intent", {
-                totalPrice: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
-            }) // Spring Boot backend URL
+            .post("http://localhost:8080/api/order/payment-intent",cartItems, {withCredentials:true}) // Spring Boot backend URL
             .then((res) => setClientSecret(res.data.clientSecret))
             .catch(() => setError("Failed to load payment intent"));
     }, [cartItems]);
@@ -66,7 +64,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="modern-form" style={{ maxWidth: 500 }}>
+        <form onSubmit={handleSubmit} className="checkout-form-wrapper" style={{ maxWidth: 500 }}>
             <h3 style={{ textAlign: "center" }}>Complete Your Order</h3>
             <CardElement
                 options={{

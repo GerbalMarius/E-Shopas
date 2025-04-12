@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import {Link, NavigateFunction, useNavigate} from "react-router-dom";
 import {
     Navbar,
     NavbarBrand,
@@ -8,12 +8,45 @@ import {
     NavItem,
     NavLink
 } from "reactstrap";
-import React from "react";
+import React, {useEffect} from "react";
+import axios from "axios";
+import {BACKEND_PREFIX} from "../App";
+
+interface Category {
+    id : bigint
+    description : string
+    title : string
+}
 
 const Home = () => {
     const [isOpen, setIsOpen] = React.useState(false);
     const toggle = () => setIsOpen(!isOpen);
 
+    const navigate: NavigateFunction = useNavigate();
+
+    const [categories, setCategories] = React.useState<Category[] | null>([]);
+
+    useEffect(() => {
+        const contr = new AbortController();
+
+        (async () => {
+            try {
+                const response = await axios.get<Category[]>(
+                    `${BACKEND_PREFIX}/api/product/categories`,
+                    { signal: contr.signal }
+                );
+                setCategories(response.data);
+            } catch (err) {
+                if (!contr.signal.aborted) {
+                    setCategories([]); // set to empty array or null as fallback
+                    navigate("/");
+                }
+            }
+        })();
+
+        return () => contr.abort();
+    }, [navigate]);
+    const actualCategories = categories ?? []
     return (
         <>
             <Navbar className="navbar-custom" expand="md">
@@ -52,15 +85,21 @@ const Home = () => {
                 </section>
 
                 <section className="product-grid">
-                    {[1, 2, 3].map((item) => (
-                        <Link key={item} to={`/product/${item}`} className="text-decoration-none text-dark">
-                            <div className="product-card">
-                                <img src={`/product${item}.jpg`} alt={`Product ${item}`} />
-                                <h5>Product {item}</h5>
-                                <p>$19.99</p>
-                            </div>
-                        </Link>
-                    ))}
+                    <h2>Categories</h2>
+                    <div className="category-grid">
+                        {actualCategories.length > 0 ? (
+                            actualCategories.map((category) => (
+                                <div key={category.id.toString()} className="category-card">
+                                    <Link to={`/category/${category.id}`} className="text-decoration-none text-dark">
+                                        <h5>{category.title}</h5>
+                                        <p>{category.description}</p>
+                                    </Link>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No categories available.</p>
+                        )}
+                    </div>
                 </section>
             </div>
             </div>
