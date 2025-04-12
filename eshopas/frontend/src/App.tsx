@@ -9,7 +9,7 @@ import Register from "./Components/Register";
 import 'bootstrap/dist/css/bootstrap.min.css';
  import './index.css';
 
-
+export const BACKEND_PREFIX:string = 'http://localhost:8080';
 function App()  {
     return (
         <div className="page-container">

@@ -31,8 +31,9 @@ public final class Product {
     private int units;
 
     @JsonIgnore
+    @Lob
     @Column(name = "picture", length = 1000000)
-    private Byte[] picture;
+    private byte picture;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
