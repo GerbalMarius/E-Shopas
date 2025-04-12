@@ -1,4 +1,4 @@
-package Models;
+package org.uml.eshopas.Models;
 
 public enum DeliveryMethod {
     COURIER,

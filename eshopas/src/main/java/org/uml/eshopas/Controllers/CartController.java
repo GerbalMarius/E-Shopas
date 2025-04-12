@@ -1,4 +1,4 @@
-package Controllers;
+package org.uml.eshopas.Controllers;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -6,8 +6,7 @@ import {
     Collapse,
     Nav,
     NavItem,
-    NavLink,
-    Button,
+    NavLink
 } from "reactstrap";
 import React from "react";
 
@@ -65,6 +64,10 @@ const Home = () => {
                 </section>
             </div>
             </div>
+
+            <footer style={{ padding: '20px', textAlign: 'center', background: '#eee' }}>
+                © 2025 E-Shop
+            </footer>
         </>
     );
 };

@@ -1,4 +1,4 @@
-package Models;
+package org.uml.eshopas.Models;
 
 
 import jakarta.persistence.*;

@@ -1,12 +1,9 @@
-
-
 import React from "react";
 import {
     Form,
     FormGroup,
     Label,
-    Input,
-    Button
+    Input
 } from "reactstrap";
 
 const Register = () => {
@@ -45,13 +42,13 @@ const Register = () => {
                 <FormGroup>
                     <Label for="gender">Gender</Label>
                     <Input type="select" id="gender" className="form-control">
-                        <option value="">Select gender</option>
+                        <option value="" disabled selected>Select gender</option>
                         <option>Male</option>
                         <option>Female</option>
                     </Input>
                 </FormGroup>
 
-                <Button className="btn-purple-gradient">Register</Button>
+                <Input className="btn-purple-gradient" type={"submit"} value={"Register"} style={{color:"white"}}></Input>
             </Form>
         </div>
     );
