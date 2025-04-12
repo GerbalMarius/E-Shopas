@@ -8,6 +8,7 @@ import Login from "./Components/Login";
 import Register from "./Components/Register";
 import 'bootstrap/dist/css/bootstrap.min.css';
  import './index.css';
+import AddProduct from "./Components/AddProduct";
 
 export interface CartItem {
     name: string;
@@ -29,6 +30,7 @@ function App()  {
                             <Route path={"/order"} element={<Order/>}></Route>
                             <Route path={"/login"} element={<Login/>}></Route>
                             <Route path={"/register"} element={<Register/>}></Route>
+                            <Route path="/add-product" element={<AddProduct/>} />
                         </Routes>
                     </main>
                 </div>

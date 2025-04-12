@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
+import java.util.Base64;
 import java.util.Collection;
 
 @Entity
@@ -51,4 +52,11 @@ public final class Product {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Manufacturer manufacturer;
+
+    public String getPictureBase64() {
+        if (this.picture != null) {
+            return Base64.getEncoder().encodeToString(this.picture);
+        }
+        return null;
+    }
 }
