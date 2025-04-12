@@ -24,6 +24,6 @@ public final class Cart {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Order order;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy ="cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Collection<CartProduct> cartProducts;
 }

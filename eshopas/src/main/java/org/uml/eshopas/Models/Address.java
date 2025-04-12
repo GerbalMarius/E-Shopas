@@ -29,7 +29,4 @@ public final class Address {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "deliveryAddress")
     private Collection<Order> orders;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Cart cart;
 }

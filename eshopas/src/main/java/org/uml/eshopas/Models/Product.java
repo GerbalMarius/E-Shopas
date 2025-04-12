@@ -42,7 +42,7 @@ public final class Product {
     @Column(name = "discount", precision = 5, scale = 2)
     private BigDecimal discount;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Collection<CartProduct> cartProducts;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
