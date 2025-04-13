@@ -6,6 +6,7 @@ import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -30,6 +31,12 @@ public final class Address {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "deliveryAddress")
     private Collection<Order> orders;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Cart cart;
+    public Address() {}
+
+    public Address(String street, String houseNumber, City city, Collection<Order> orders) {
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.city = city;
+        this.orders = new ArrayList<>(orders);
+    }
 }
