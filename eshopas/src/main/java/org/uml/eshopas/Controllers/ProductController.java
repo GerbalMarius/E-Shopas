@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.uml.eshopas.DTOS.ProductData;
 import org.uml.eshopas.EshopApplication;
+import org.uml.eshopas.Models.Category;
+import org.uml.eshopas.Models.Manufacturer;
 import org.uml.eshopas.Models.Product;
 import org.uml.eshopas.Repositories.CategoryRepository;
 import org.uml.eshopas.Repositories.ManufacturerRepository;
@@ -36,12 +38,41 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductData>> allProducts() {
-        List<ProductData> productDataList = productRepository.findAll().stream()
-                .map(ProductData::new) // Convert to DTO
-                .collect(Collectors.toList());
+    public ResponseEntity<List<ProductData>> getFilteredProducts(
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String manufacturer
+    ) {
+        List<Product> products = productRepository.findAll();
+
+        if (minPrice != null) {
+            products = products.stream()
+                    .filter(p -> p.getPrice().compareTo(minPrice) >= 0)
+                    .collect(Collectors.toList());
+        }
+
+        if (maxPrice != null) {
+            products = products.stream()
+                    .filter(p -> p.getPrice().compareTo(maxPrice) <= 0)
+                    .collect(Collectors.toList());
+        }
+
+        if (category != null) {
+            long categoryId = Long.parseLong(category);
+            products = products.stream().filter(p -> p.getCategory().getId() == categoryId).collect(Collectors.toList());
+        }
+
+        if (manufacturer != null) {
+            long manufacturerId = Long.parseLong(manufacturer);
+            products = products.stream().filter(p -> p.getManufacturer().getId() == manufacturerId).collect(Collectors.toList());
+        }
+
+        List<ProductData> productDataList = products.stream().map(ProductData::new).collect(Collectors.toList());
         return ResponseEntity.ok(productDataList);
     }
+
+
 
     @PostMapping("/add")
     public ResponseEntity<?> addProduct(@RequestParam("name") String name,
@@ -108,5 +139,16 @@ public class ProductController {
         return ResponseEntity.ok(productData);
     }
 
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return ResponseEntity.ok(categories);
+    }
+
+    @GetMapping("/manufacturers")
+    public ResponseEntity<List<Manufacturer>> getManufacturers() {
+        List<Manufacturer> manufacturers = manufacturerRepository.findAll();
+        return ResponseEntity.ok(manufacturers);
+    }
 
 }
