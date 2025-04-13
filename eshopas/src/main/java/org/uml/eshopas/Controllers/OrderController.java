@@ -117,7 +117,6 @@ public class OrderController {
             address = addressRepository.save(address);
         }
 
-
         Guest guest = new Guest();
         guest.setName(details.firstName());
         guest.setLastName(details.lastName());
@@ -127,10 +126,21 @@ public class OrderController {
         Cart cart = new Cart();
         cart.setGuest(guest);
         guest.setCart(cart);
-        System.out.println("Cart ID before saving order: " + cart.getId());
 
+        guest = guestRepository.save(guest);
+
+        Order order = new Order();
+        order.setOrderDate(LocalDateTime.now());
+        order.setStatus(OrderStatus.SUBMITTED);
+        order.setDeliveryMethod(DeliveryMethod.AT_LOCATION);
+        order.setDeliveryAddress(address);
+        order.setCart(guest.getCart());
+
+        orderRepository.save(order);
+
+        System.out.println("Cart ID before saving order: " + guest.getCart().getId());
         System.out.println("Payment info received: " + details);
-        guestRepository.save(guest);
+
         return new ResponseEntity<>(Collections.emptyMap(), HttpStatus.OK);
     }
 
