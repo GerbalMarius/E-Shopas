@@ -3,12 +3,14 @@ package org.uml.eshopas.Controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.uml.eshopas.DTOS.CartRequest;
 import org.uml.eshopas.DTOS.ProductData;
 import org.uml.eshopas.EshopApplication;
 import org.uml.eshopas.Models.Product;
 import org.uml.eshopas.Repositories.CategoryRepository;
 import org.uml.eshopas.Repositories.ManufacturerRepository;
 import org.uml.eshopas.Repositories.ProductRepository;
+import org.uml.eshopas.Services.ProductService;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -28,11 +30,14 @@ public class ProductController {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ManufacturerRepository manufacturerRepository;
+    private final CartController cartController;
 
-    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository, ManufacturerRepository manufacturerRepository) {
+
+    public ProductController(ProductRepository productRepository, CategoryRepository categoryRepository, ManufacturerRepository manufacturerRepository, CartController cartController) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.manufacturerRepository = manufacturerRepository;
+        this.cartController = cartController;
     }
 
     @GetMapping("/products")
@@ -41,6 +46,13 @@ public class ProductController {
                 .map(ProductData::new) // Convert to DTO
                 .collect(Collectors.toList());
         return ResponseEntity.ok(productDataList);
+    }
+
+    @PostMapping("/add_to_cart")
+    public ResponseEntity<?> putProductInCart(@RequestBody CartRequest cartRequest) {
+        System.out.println("Adding product ID " + cartRequest.getProductId() + "  Quantity " + cartRequest.getQuantity());
+
+        return cartController.requestCurrentCart(cartRequest.getProductId());
     }
 
     @PostMapping("/add")

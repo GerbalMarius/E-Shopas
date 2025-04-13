@@ -20,6 +20,28 @@ interface Product {
 const Product = () => {
     const { id } = useParams(); // Get the product ID from the URL
     const [product, setProduct] = useState<Product | null>(null);
+    const [quantity, setQuantity] = useState<number>(1);
+
+    const putProductInCart = async (productId: number) => {
+        try {
+            const response = await fetch(`${BACKEND_PREFIX}/api/product/add_to_cart`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId, quantity }),
+            });
+
+            if (response.ok) {
+                alert('Added to cart!');
+            } else {
+                alert('Failed to add to cart.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error adding to cart');
+        }
+    };
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -64,8 +86,32 @@ const Product = () => {
                         <h3>Manufacturer: {product.manufacturerName}</h3>
                     </div>
                 </div>
-                <div className="action-btn-container">
-                    <button className="action-btn">Add to Cart</button>
+                <div className="action-btn-container" style={{ display: 'flex', alignItems: 'center',justifyContent: 'center', gap: '10px' }}>
+                    <button
+                        className="action-btn"
+                        style={{
+                            fontSize: '14px',
+                            padding: '6px 12px',
+                            width: 'auto', // prevent full width
+                            whiteSpace: 'nowrap',
+                        }}
+                        onClick={() => putProductInCart(product.id)}
+                    >
+                        Add to Cart
+                    </button>
+                    <input
+                        type="number"
+                        min={1}
+                        value={quantity}
+                        onChange={(e) => setQuantity(parseInt(e.target.value))}
+                        style={{
+                            width: '60px',
+                            padding: '4px 8px',
+                            fontSize: '14px',
+                            borderRadius: '4px',
+                            border: '1px solid #ccc',
+                        }}
+                    />
                 </div>
             </div>
         </div>

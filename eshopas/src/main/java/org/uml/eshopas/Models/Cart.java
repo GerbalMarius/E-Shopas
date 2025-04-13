@@ -11,6 +11,10 @@ import java.util.Collection;
 @Table
 public final class Cart {
 
+    public  Cart(){
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
