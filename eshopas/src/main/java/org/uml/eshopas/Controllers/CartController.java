@@ -1,5 +1,6 @@
 package org.uml.eshopas.Controllers;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +23,31 @@ import org.uml.eshopas.Repositories.ManufacturerRepository;
 import lombok.val;
 
 import org.uml.eshopas.Repositories.CartRepository;
+import org.uml.eshopas.Repositories.GuestRepository;
 
 @RestController
 @RequestMapping("api/cart")
 @CrossOrigin(origins = EshopApplication.REACT_FRONT_URL, allowCredentials = "true")
 public class CartController {
     private final CartRepository cartRepository;
+    private final GuestRepository guestRepository;
 
-    public CartController(CartRepository cartRepository) {
+    public CartController(CartRepository cartRepository, GuestRepository guestRepository) {
         this.cartRepository = cartRepository;
+        this.guestRepository = guestRepository;
     }
 
-   Optional<Cart> requestCurrentCart(Long Guest_id){
-        return cartRepository.findCartByGuest_id(Guest_id);
+    Cart requestCurrentCart(Long Guest_id){
+        val currCart = cartRepository.findCartByGuest_id(Guest_id);
+
+        if(!currCart.isPresent()){
+            Cart cart = new Cart();
+            cart.setTotalPrice(BigDecimal.valueOf(0));
+            cart.setGuest(guestRepository.getReferenceById(Guest_id));
+            cartRepository.save(cart);
+            return cart;
+        }
+        return currCart.get();
     }
 
     @GetMapping("/cartItems")
@@ -42,12 +55,7 @@ public class CartController {
         val currCart = requestCurrentCart(1l); // change later
         List<CartItem> currItems = new ArrayList<>();
 
-        if(!currCart.isPresent()){
-            return ResponseEntity.ok(currItems);
-        }
-
-        for (val item : currCart.get().getCartProducts()) {
-            System.out.println("Was");
+        for (val item : currCart.getCartProducts()) {
             CartItem cartItem = new CartItem();
             Product product = item.getProduct();
             cartItem.setName(product.getName());
