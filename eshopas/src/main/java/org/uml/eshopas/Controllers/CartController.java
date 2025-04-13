@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.aop.support.AopUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,12 +38,8 @@ public class CartController {
     }
 
     @GetMapping("/cartItems")
-    @Transactional
-    ResponseEntity<List<CartItem>> requestCurrentCartItems(){
-        System.out.println("Cart endpoint hit");
-        
+    ResponseEntity<List<CartItem>> requestCurrentCartItems(){        
         val currCart = requestCurrentCart(1l); // change later
-
         List<CartItem> currItems = new ArrayList<>();
 
         if(!currCart.isPresent()){

@@ -13,40 +13,35 @@ interface Product {
 
 const Cart = () => {
 
-    // const [isOpen, setIsOpen] = React.useState(false);
-    // const toggle = () => setIsOpen(!isOpen);
+    const [isOpen, setIsOpen] = React.useState(false);
+    const toggle = () => setIsOpen(!isOpen);
 
-    // const navigate: NavigateFunction = useNavigate();
+    const navigate: NavigateFunction = useNavigate();
 
-    // const [products, setProducts] = React.useState<Product[] | null>([]);
+    const [products, setProducts] = React.useState<Product[] | null>([]);
 
-    // useEffect(() => {
-    //     const contr = new AbortController();
+    useEffect(() => {
+        const contr = new AbortController();
 
-    //     (async () => {
-    //         try {
-    //             const response = await axios.get<Product[]>(
-    //                 `${BACKEND_PREFIX}/api/cart/cartItems`,
-    //                 { signal: contr.signal }
-    //             );
-    //             setProducts(response.data);
-    //         } catch (err) {
-    //             if (!contr.signal.aborted) {
-    //                 setProducts([]); // set to empty array or null as fallback
-    //                 navigate("/");
-    //             }
-    //         }
-    //     })();
+        (async () => {
+            try {
+                const response = await axios.get<Product[]>(
+                    `${BACKEND_PREFIX}/api/cart/cartItems`,
+                    { signal: contr.signal }
+                );
+                setProducts(response.data);
+            } catch (err) {
+                if (!contr.signal.aborted) {
+                    setProducts([]); // set to empty array or null as fallback
+                    navigate("/");
+                }
+            }
+        })();
 
-    //     return () => contr.abort();
-    // }, [navigate]);
+        return () => contr.abort();
+    }, [navigate]);
 
-    // const cartItems = products ?? [];
-
-    const cartItems = [
-        { id: 1, name: "Product A", quantity: 2, price: 19.99 },
-        { id: 2, name: "Product B", quantity: 1, price: 9.99 },
-    ];
+    const cartItems = products ?? [];
 
     const total = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
