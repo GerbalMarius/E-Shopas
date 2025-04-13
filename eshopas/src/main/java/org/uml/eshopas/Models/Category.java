@@ -1,5 +1,6 @@
 package org.uml.eshopas.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public final class Category {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Collection<Product> products;
 }

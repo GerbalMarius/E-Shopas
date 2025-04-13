@@ -24,6 +24,7 @@ public final class Guest {
     @Column(nullable = false, name = "telephone_number")
     private String telephoneNumber;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 }

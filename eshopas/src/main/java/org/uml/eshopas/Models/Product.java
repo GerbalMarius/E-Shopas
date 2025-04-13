@@ -1,5 +1,6 @@
 package org.uml.eshopas.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -42,15 +43,17 @@ public final class Product {
     @Column(name = "discount", precision = 5, scale = 2)
     private BigDecimal discount;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Collection<CartProduct> cartProducts;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     private Manufacturer manufacturer;
 
     public String getPictureBase64() {

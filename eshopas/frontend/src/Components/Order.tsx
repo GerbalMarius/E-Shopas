@@ -30,9 +30,12 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
     // Customer fields
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [address, setAddress] = useState("");
     const [telephoneNumber, setTelephoneNumber] = useState("");
     const [email, setEmail] = useState("");
+
+    const [street, setStreet] = useState("");
+    const [houseNumber, setHouseNumber] = useState("");
+    const [cityName, setCityName] = useState("");
 
     useEffect(() => {
         axios
@@ -65,7 +68,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
                     email,
                     phone: telephoneNumber,
                     address: {
-                        line1: address,
+                        line1: street + houseNumber + cityName,
                     },
                 },
             },
@@ -74,24 +77,30 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
         if (result.error) {
             setError(result.error.message ?? "Payment failed.");
         } else if (result.paymentIntent?.status === "succeeded") {
-            const paymentData = {
-                name: `${firstName} ${lastName}`,
-                email,
-                phone: telephoneNumber,
-                address: address,
-                paymentIntentId: result.paymentIntent.id
-            };
+            if (!success) {
+                try {
+                    const paymentData = {
+                        firstName,
+                        lastName,
+                        email,
+                        phone: telephoneNumber,
+                        street,
+                        houseNumber,
+                        cityName,
+                        paymentIntentId: result.paymentIntent.id
+                    };
 
-            try {
-                await axios.post(`${BACKEND_PREFIX}/api/order/submit-payment`, paymentData, {
-                    withCredentials: true,
-                });
-                setSuccess("✅ Payment successful!");
-            } catch (err: any) {
-                if (err.response?.status === 400 && err.response.data) {
-                    setValidationErrors(err.response.data);
-                } else {
-                    setError("Something went wrong while submitting payment details.");
+                    await axios.post(`${BACKEND_PREFIX}/api/order/submit-payment`, paymentData, {
+                        withCredentials: true,
+                    });
+
+                    setSuccess("✅ Payment successful!");
+                } catch (err: any) {
+                    if (err.response?.status === 400 && err.response.data) {
+                        setValidationErrors(err.response.data);
+                    } else {
+                        setError("Something went wrong while submitting payment details.");
+                    }
                 }
             }
         }
@@ -100,57 +109,112 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="checkout-form-wrapper m-auto">
-            <h3>Complete Your Order</h3>
+        <form onSubmit={handleSubmit} className="checkout-form-wrapper m-auto p-4 card shadow rounded" style={{ maxWidth: "600px" }}>
+            <h3 className="mb-4 text-center">Complete Your Order</h3>
 
-            <input
-                type="text"
-                placeholder="First Name"
-                className="form-control my-2"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="Last Name"
-                className="form-control my-2"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-            />
-            <input
-                type="text"
-                placeholder="Address"
-                className="form-control my-2"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-            />
-            <input
-                type="tel"
-                placeholder="Phone Number"
-                className="form-control my-2"
-                value={telephoneNumber}
-                onChange={(e) => setTelephoneNumber(e.target.value)}
-            />
-            <input
-                type="email"
-                placeholder="Email"
-                className="form-control my-2"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
+            <div className="row g-3">
+                <div className="col-md-6">
+                    <label htmlFor="firstName" className="form-label">First Name</label>
+                    <input
+                        id="firstName"
+                        type="text"
+                        placeholder="Enter your first name"
+                        className="form-control"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                    />
+                </div>
 
-            <CardElement
-                options={{
-                    style: {
-                        base: {
-                            fontSize: "16px",
-                            color: "#32325d",
-                            "::placeholder": { color: "#a0a0a0" },
-                        },
-                        invalid: { color: "#fa755a" },
-                    },
-                }}
-            />
+                <div className="col-md-6">
+                    <label htmlFor="lastName" className="form-label">Last Name</label>
+                    <input
+                        id="lastName"
+                        type="text"
+                        placeholder="Enter your last name"
+                        className="form-control"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                    />
+                </div>
+
+                <div className="col-md-6">
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        className="form-control"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+
+                <div className="col-md-6">
+                    <label htmlFor="telephoneNumber" className="form-label">Phone Number</label>
+                    <input
+                        id="telephoneNumber"
+                        type="tel"
+                        placeholder="Enter your phone number"
+                        className="form-control"
+                        value={telephoneNumber}
+                        onChange={(e) => setTelephoneNumber(e.target.value)}
+                    />
+                </div>
+
+                <div className="col-12">
+                    <label htmlFor="street" className="form-label">Street</label>
+                    <input
+                        id="street"
+                        type="text"
+                        placeholder="e.g. Main Street"
+                        className="form-control"
+                        value={street}
+                        onChange={(e) => setStreet(e.target.value)}
+                    />
+                </div>
+
+                <div className="col-md-6">
+                    <label htmlFor="houseNumber" className="form-label">House Number</label>
+                    <input
+                        id="houseNumber"
+                        type="text"
+                        placeholder="e.g. 42B"
+                        className="form-control"
+                        value={houseNumber} // bind to state if added separately
+                        onChange={(e) => {setHouseNumber(e.target.value)}} // add state handler
+                    />
+                </div>
+
+                <div className="col-md-6">
+                    <label htmlFor="cityName" className="form-label">City</label>
+                    <input
+                        id="cityName"
+                        type="text"
+                        placeholder="e.g. New York"
+                        className="form-control"
+                        value={cityName}
+                        onChange={(e) => {setCityName(e.target.value)}}
+                    />
+                </div>
+            </div>
+
+            <div className="mt-4">
+                <label className="form-label">Card Details</label>
+                <div className="border p-2 rounded">
+                    <CardElement
+                        options={{
+                            style: {
+                                base: {
+                                    fontSize: "16px",
+                                    color: "#32325d",
+                                    "::placeholder": { color: "#a0a0a0" },
+                                },
+                                invalid: { color: "#fa755a" },
+                            },
+                        }}
+                    />
+                </div>
+            </div>
 
             {error && <div className="alert alert-danger mt-3">{error}</div>}
             {success && <div className="alert alert-success mt-3">{success}</div>}
@@ -166,13 +230,16 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
                 </div>
             )}
 
-            <button
-                className="btn btn-purple-gradient"
-                disabled={!stripe || !elements || processing}
-                type="submit"
-            >
-                {processing ? "Processing..." : "Pay Now"}
-            </button>
+            <div className="text-center mt-4">
+                <button
+                    className="btn btn-purple-gradient px-4 py-2"
+                    disabled={!stripe || !elements || processing}
+                    type="submit"
+                    style={{ color: "white" }}
+                >
+                    {processing ? "Processing..." : "Pay Now"}
+                </button>
+            </div>
         </form>
     );
 };
