@@ -8,7 +8,7 @@ import java.util.Collection;
 
 @Entity
 @Data
-@Table
+@Table(name = "carts")
 public final class Cart {
 
     @Id
@@ -18,12 +18,14 @@ public final class Cart {
     @Column(name = "total_price", precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "cart")
     private Guest guest;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(mappedBy = "cart", cascade = CascadeType.ALL)
     private Order order;
 
     @OneToMany(mappedBy ="cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Collection<CartProduct> cartProducts;
+
+
 }

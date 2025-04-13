@@ -27,15 +27,15 @@ const Cart = () => {
                     <tr key={item.id}>
                         <td>{item.name}</td>
                         <td>{item.quantity}</td>
-                        <td>${item.price.toFixed(2)}</td>
-                        <td>${(item.quantity * item.price).toFixed(2)}</td>
+                        <td>{item.price.toFixed(2)}€</td>
+                        <td>{(item.quantity * item.price).toFixed(2)}€</td>
                     </tr>
                 ))}
                 </tbody>
             </table>
 
             <div className="cart-footer">
-                <p><strong>Total:</strong> ${total.toFixed(2)}</p>
+                <p><strong>Total:</strong> {total.toFixed(2)}€</p>
                 <Link to="/order">Submit order</Link>
             </div>
         </div>
