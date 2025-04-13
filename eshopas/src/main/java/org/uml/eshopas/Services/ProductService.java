@@ -28,21 +28,5 @@ public final class ProductService {
         this.orderRepository = orderRepository;
     }
 
-    public Cart addProductToCart(Long cartId, Long productId, int amount) {
-        Optional<Cart> cart = cartRepository.findById(cartId);
-        Optional<Product> product = productRepository.findById(productId);
 
-        if (cart.isPresent() && product.isPresent()) {
-            CartProduct cartProduct = new CartProduct();
-            cartProduct.setCart(cart.get());
-            cartProduct.setProduct(product.get());
-            cartProduct.setAmount(amount);
-
-            cart.get().getCartProducts().add(cartProduct);
-            product.get().getCartProducts().add(cartProduct);
-
-            return cart.get();
-        }
-        return null;
-    }
 }
