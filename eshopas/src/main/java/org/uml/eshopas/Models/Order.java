@@ -29,6 +29,7 @@ public final class Order {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Address deliveryAddress;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false, orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 }

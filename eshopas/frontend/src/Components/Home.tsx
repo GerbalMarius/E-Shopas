@@ -23,7 +23,6 @@ interface Manufacturer {
 
 const Home = () => {
     const [isOpen, setIsOpen] = React.useState(false);
-    const [priceRange, setPriceRange] = React.useState<string>('');
     const [categoryFilter, setCategoryFilter] = React.useState<string>('');
     const [manufacturerFilter, setManufacturerFilter] = React.useState<string>('');
     const [filteredProducts, setFilteredProducts] = React.useState<ProductView[] | null>(null);
@@ -50,8 +49,8 @@ const Home = () => {
                 setFilteredProducts(response.data);  // Set filteredProducts to all products initially
             } catch (err) {
                 if (!contr.signal.aborted) {
-                    setProducts([]); // set to empty array or null as fallback
-                    setFilteredProducts([]);  // Also clear filtered products on error
+                    setProducts([]);
+                    setFilteredProducts([]);
                     navigate("/");
                 }
             }
@@ -60,10 +59,16 @@ const Home = () => {
         // Fetch categories and manufacturers for the filter options
         (async () => {
             try {
-                const categoryResponse = await axios.get<Category[]>(`${BACKEND_PREFIX}/api/product/categories`);
+                const categoryResponse = await axios.get<Category[]>(
+                    `${BACKEND_PREFIX}/api/product/categories`,
+                    {withCredentials: true}
+                );
                 setCategories(categoryResponse.data);
 
-                const manufacturerResponse = await axios.get<Manufacturer[]>(`${BACKEND_PREFIX}/api/product/manufacturers`);
+                const manufacturerResponse = await axios.get<Manufacturer[]>(
+                    `${BACKEND_PREFIX}/api/product/manufacturers`,
+                    {withCredentials: true}
+                );
                 setManufacturers(manufacturerResponse.data);
             } catch (err) {
                 console.error("Error fetching categories or manufacturers:", err);
@@ -89,11 +94,6 @@ const Home = () => {
             setFilteredProducts([]);
         }
     };
-
-
-
-    const actualProducts = products ?? [];
-
     return (
         <>
             <Navbar className="navbar-custom" expand="md">
