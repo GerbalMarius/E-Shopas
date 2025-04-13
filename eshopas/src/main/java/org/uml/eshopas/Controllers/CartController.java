@@ -49,7 +49,7 @@ public class CartController {
     Cart requestCurrentCart(Long Guest_id){
         Optional<Cart> currCart = cartRepository.findCartByGuest_id(Guest_id);
 
-        if(currCart.isEmpty()){
+        if(!currCart.isPresent()){
             Cart cart = new Cart();
             cart.setTotalPrice(BigDecimal.valueOf(0));
             cart.setGuest(guestRepository.getReferenceById(Guest_id));
@@ -76,7 +76,6 @@ public class CartController {
                 cartProd.setProduct(product.get());
                 cartProd.setAmount(amount);
 
-                cart.getCartProducts().add(cartProd);
                 product.get().getCartProducts().add(cartProd);
             }
             productRepository.save(product.get());
