@@ -46,21 +46,25 @@ public class CartController {
         return null;
     }
 
-    public ResponseEntity<Integer> requestCurrentCart(Long productId, int amount) {
-        Optional<Cart> currCart = cartRepository.findCartByGuest_id(1l);
-        Cart cart;
-        if (currCart.isEmpty()) {
-            cart = new Cart();
-            cart.setTotalPrice(BigDecimal.valueOf(0));
-            cartRepository.save(cart);
-        } else {
-            cart = currCart.get();
-        }
+    Cart requestCurrentCart(Long Guest_id){
+        Optional<Cart> currCart = cartRepository.findCartByGuest_id(Guest_id);
 
+        if(currCart.isEmpty()){
+            Cart cart = new Cart();
+            cart.setTotalPrice(BigDecimal.valueOf(0));
+            cart.setGuest(guestRepository.getReferenceById(Guest_id));
+            cartRepository.save(cart);
+            return cart;
+        }
+        return currCart.get();
+    }
+
+    public ResponseEntity<Integer> tryAddProductToCart(Long productId, int amount) {
+        Cart cart = requestCurrentCart(1l);
         Optional<Product> product = productRepository.findById(productId);
-        Optional<CartProduct> cartProduct = cart.getCartProducts().stream().filter(item -> item.getProduct().equals(product.get())).findAny();
 
         if (product.isPresent()) {
+            Optional<CartProduct> cartProduct = cart.getCartProducts().stream().filter(item -> item.getProduct().equals(product.get())).findAny();
             amount = Math.min(amount, product.get().getUnits());
             product.get().setUnits(product.get().getUnits() - amount);
 
@@ -82,19 +86,6 @@ public class CartController {
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    Cart requestCurrentCart(Long Guest_id){
-        val currCart = cartRepository.findCartByGuest_id(Guest_id);
-
-        if(!currCart.isPresent()){
-            Cart cart = new Cart();
-            cart.setTotalPrice(BigDecimal.valueOf(0));
-            cart.setGuest(guestRepository.getReferenceById(Guest_id));
-            cartRepository.save(cart);
-            return cart;
-        }
-        return currCart.get();
     }
 
     @GetMapping("/cartItems")

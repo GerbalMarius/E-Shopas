@@ -44,7 +44,7 @@ public class ProductController {
     public ResponseEntity<?> putProductInCart(@RequestBody CartRequest cartRequest) {
         System.out.println("Adding product ID " + cartRequest.getProductId() + "  Quantity " + cartRequest.getQuantity());
 
-        return cartController.requestCurrentCart(cartRequest.getProductId(), cartRequest.getQuantity());
+        return cartController.tryAddProductToCart(cartRequest.getProductId(), cartRequest.getQuantity());
     }
 
     @GetMapping("/products")
