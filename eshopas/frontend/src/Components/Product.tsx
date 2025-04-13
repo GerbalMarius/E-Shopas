@@ -67,6 +67,12 @@ const Product = () => {
                 <div className="action-btn-container">
                     <button className="action-btn">Add to Cart</button>
                 </div>
+                <div className="action-btn-container">
+                    <button className="action-btn">Reviews</button>
+                </div>
+                <div className="action-btn-container">
+                    <button className="action-btn">Leave a review</button>
+                </div>
             </div>
         </div>
     );
