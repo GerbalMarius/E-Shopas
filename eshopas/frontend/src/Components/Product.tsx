@@ -33,7 +33,15 @@ const Product = () => {
             });
 
             if (response.ok) {
-                alert('Added to cart!');
+                const units = await response.json();
+                if (quantity != 0 && units == 0){
+                    alert('Product is out of stock!');
+                }else if (units == 1){
+                    alert('Added '+ units + ' product to cart!');
+                }else{
+                    alert('Added '+ units + ' products to cart!');
+                }
+                window.location.reload();
             } else {
                 alert('Failed to add to cart.');
             }

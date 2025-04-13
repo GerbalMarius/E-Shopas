@@ -37,7 +37,7 @@ public class CartController {
         return null;
     }
 
-    public ResponseEntity<Cart> requestCurrentCart(Long productId, int amount){
+    public ResponseEntity<Integer> requestCurrentCart(Long productId, int amount){
         Optional<Cart> currCart = cartRepository.findCartByGuest_id(1l);
         Cart cart;
         if(currCart.isEmpty()){
@@ -69,7 +69,7 @@ public class CartController {
             productRepository.save(product.get());
             cartRepository.save(cart);
 
-            return ResponseEntity.ok(cart);
+            return ResponseEntity.ok(amount);
         }
 
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
