@@ -66,7 +66,7 @@ const Home = () => {
     const filterProducts = async () => {
         const filters: Record<string, any> = {};
 
-        filters.minPrice = 0; // visada nuo 0
+        filters.minPrice = 0;
         if (maxPrice !== null) filters.maxPrice = maxPrice;
         if (categoryFilter) filters.category = categoryFilter;
         if (manufacturerFilter) filters.manufacturer = manufacturerFilter;

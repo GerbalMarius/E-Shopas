@@ -142,7 +142,7 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
         Product product = productOpt.get();
-        // Pridedame kategorijos ir gamintojo pavadinimus
+
         ProductData productData = new ProductData(product);
         productData.setCategoryName(product.getCategory().getTitle()); // Set category name
         productData.setManufacturerName(product.getManufacturer().getName()); // Set manufacturer name
