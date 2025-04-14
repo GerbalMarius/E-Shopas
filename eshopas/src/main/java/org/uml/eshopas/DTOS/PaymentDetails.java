@@ -2,6 +2,8 @@ package org.uml.eshopas.DTOS;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import org.uml.eshopas.Models.DeliveryMethod;
 
 public record PaymentDetails(
 
@@ -27,6 +29,9 @@ public record PaymentDetails(
 
         @NotEmpty(message = "City name must not be empty")
         String cityName,
+
+        @NotNull(message = "Delivery method must not be null")
+        DeliveryMethod deliveryMethod,
 
         String paymentIntentId
 ) {

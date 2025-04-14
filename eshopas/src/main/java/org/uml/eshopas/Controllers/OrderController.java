@@ -67,9 +67,11 @@ public class OrderController {
 
     @PostMapping("/payment-intent")
     public Map<String, String> payment(@RequestBody List<CartItem> cartItems) throws StripeException {
+        System.out.println(cartItems);
         long totalAmount = cartItems.stream()
                 .mapToLong(item -> (long) (item.getPrice() * 100 * item.getQuantity()))
                 .sum(); // Convert to cents and sum
+
 
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(totalAmount)
@@ -117,13 +119,16 @@ public class OrderController {
             address = addressRepository.save(address);
         }
 
-        Guest guest = new Guest();
+        Guest guest = guestRepository.findGuestById(15L);
         guest.setName(details.firstName());
         guest.setLastName(details.lastName());
         guest.setEmail(details.email());
         guest.setTelephoneNumber(details.phone());
 
-        Cart cart = new Cart();
+        Cart cart = cartRepository.findCartByGuest_Email(guest.getEmail());
+        if (cart == null) {
+            cart = new Cart();
+        }
         cart.setGuest(guest);
         guest.setCart(cart);
 

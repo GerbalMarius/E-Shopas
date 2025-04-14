@@ -2,24 +2,9 @@ import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import { Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink } from "reactstrap";
 import React, { useEffect } from "react";
 import axios from "axios";
-import { BACKEND_PREFIX } from "../App";
+import {BACKEND_PREFIX, Category, Manufacturer, ProductView} from "../App";
 
-interface ProductView {
-    id: number;
-    name: string;
-    price: number;
-    pictureBase64?: string;
-}
 
-interface Category {
-    id: number;
-    title: string;
-}
-
-interface Manufacturer {
-    id: number;
-    name: string;
-}
 
 const Home = () => {
     const [isOpen, setIsOpen] = React.useState(false);

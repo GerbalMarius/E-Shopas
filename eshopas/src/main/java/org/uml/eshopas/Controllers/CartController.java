@@ -18,6 +18,7 @@ import org.uml.eshopas.Models.Cart;
 import lombok.val;
 
 import org.uml.eshopas.Models.CartProduct;
+import org.uml.eshopas.Models.Guest;
 import org.uml.eshopas.Models.Product;
 import org.uml.eshopas.Repositories.CartRepository;
 import org.uml.eshopas.Repositories.ProductRepository;
@@ -46,25 +47,34 @@ public class CartController {
         return null;
     }
 
-    Cart requestCurrentCart(Long Guest_id){
+    private Cart requestCurrentCart(Long Guest_id){
         Optional<Cart> currCart = cartRepository.findCartByGuest_id(Guest_id);
 
-        if(!currCart.isPresent()){
+        if(currCart.isEmpty()){
             Cart cart = new Cart();
             cart.setTotalPrice(BigDecimal.valueOf(0));
-            cart.setGuest(guestRepository.getReferenceById(Guest_id));
+            Guest guest = guestRepository.findGuestById(Guest_id);
+            if(guest == null){
+                guest = new Guest();
+                guestRepository.save(guest);
+            }
+            cart.setGuest(guest);
+            guest.setCart(cart);
             cartRepository.save(cart);
             return cart;
         }
-        return currCart.get();
+        return currCart.orElseThrow();
     }
 
     public ResponseEntity<Integer> tryAddProductToCart(Long productId, int amount) {
-        Cart cart = requestCurrentCart(1l);
+        Cart cart = requestCurrentCart(15L);
         Optional<Product> product = productRepository.findById(productId);
 
         if (product.isPresent()) {
-            Optional<CartProduct> cartProduct = cart.getCartProducts().stream().filter(item -> item.getProduct().equals(product.get())).findAny();
+            Optional<CartProduct> cartProduct = cart.getCartProducts().stream()
+                    .filter(item -> item.getProduct().equals(product.get()))
+                    .findFirst();
+
             amount = Math.min(amount, product.get().getUnits());
             product.get().setUnits(product.get().getUnits() - amount);
 
@@ -78,7 +88,7 @@ public class CartController {
 
                 product.get().getCartProducts().add(cartProd);
             }
-            productRepository.save(product.get());
+            productRepository.save(product.orElseThrow());
             cartRepository.save(cart);
 
             return ResponseEntity.ok(amount);
@@ -89,7 +99,7 @@ public class CartController {
 
     @GetMapping("/cartItems")
     ResponseEntity<List<CartItem>> requestCurrentCartItems(){        
-        val currCart = requestCurrentCart(1l); // change later
+        val currCart = requestCurrentCart(15L); // change later
         List<CartItem> currItems = new ArrayList<>();
 
         for (val item : currCart.getCartProducts()) {

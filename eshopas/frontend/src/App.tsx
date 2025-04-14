@@ -16,6 +16,23 @@ export interface CartItem {
     quantity: number;
 }
 
+export interface ProductView {
+    id: number;
+    name: string;
+    price: number;
+    pictureBase64?: string;
+}
+
+export interface Category {
+    id: number;
+    title: string;
+}
+
+export interface Manufacturer {
+    id: number;
+    name: string;
+}
+
 export const BACKEND_PREFIX:string = 'http://localhost:8080';
 function App()  {
     return (

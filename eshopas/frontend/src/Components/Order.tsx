@@ -7,7 +7,8 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import {BACKEND_PREFIX, CartItem} from "../App";
+import {BACKEND_PREFIX, CartItem, ProductView} from "../App";
+import {useNavigate} from "react-router-dom";
 
 
 
@@ -32,15 +33,22 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
     const [lastName, setLastName] = useState("");
     const [telephoneNumber, setTelephoneNumber] = useState("");
     const [email, setEmail] = useState("");
+    const [deliveryMethod, setDeliveryMethod] = useState("COURIER");
 
     const [street, setStreet] = useState("");
     const [houseNumber, setHouseNumber] = useState("");
     const [cityName, setCityName] = useState("");
 
     useEffect(() => {
-        axios
-            .post(`${BACKEND_PREFIX}/api/order/payment-intent`, cartItems, { withCredentials: true })
-            .then((res) => setClientSecret(res.data.clientSecret))
+
+        if (cartItems.length === 0) return;
+
+        axios.post(`${BACKEND_PREFIX}/api/order/payment-intent`, cartItems, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            withCredentials: true
+        }).then((res) => setClientSecret(res.data.clientSecret))
             .catch(() => setError("Failed to load payment intent"));
     }, [cartItems]);
 
@@ -87,6 +95,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
                         street,
                         houseNumber,
                         cityName,
+                        deliveryMethod,
                         paymentIntentId: result.paymentIntent.id
                     };
 
@@ -198,6 +207,20 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
                 </div>
             </div>
 
+            <div className="col-12 mt-3">
+                <label htmlFor="deliveryMethod" className="form-label">Delivery Method</label>
+                <select
+                    id="deliveryMethod"
+                    className="form-select"
+                    value={deliveryMethod}
+                    onChange={(e) => setDeliveryMethod(e.target.value)}
+                >
+                    <option value="COURIER">Courier</option>
+                    <option value="MAILBOX">Mailbox</option>
+                    <option value="AT_LOCATION">At Location</option>
+                </select>
+            </div>
+
             <div className="mt-4">
                 <label className="form-label">Card Details</label>
                 <div className="border p-2 rounded">
@@ -245,11 +268,35 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cartItems }) => {
 };
 
 const Order: React.FC = () => {
-    const cartItems: CartItem[] = [
-        { name: "Product A", price: 19.99, quantity: 2 },
-        { name: "Product B", price: 9.99, quantity: 1 },
-    ];
+    const navigate = useNavigate();
 
+    const [cartItems, setItems] = useState<CartItem[]>([])
+
+    const actualItems:CartItem[] = [];
+
+    useEffect(() => {
+        const contr = new AbortController();
+
+        (async () => {
+            try {
+                const response = await axios.get<CartItem[]>(
+                    `${BACKEND_PREFIX}/api/cart/cartItems`,
+                    { signal: contr.signal }
+                );
+                setItems(response.data);
+            } catch (err) {
+                if (!contr.signal.aborted) {
+                    setItems([]);
+                    navigate("/");
+                }
+            }
+        })();
+
+        return () => contr.abort();
+    }, [navigate]);
+
+
+    console.log(cartItems)
     const getTotal = () =>
         cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 

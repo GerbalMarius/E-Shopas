@@ -2,6 +2,7 @@ package org.uml.eshopas.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
@@ -43,7 +44,8 @@ public final class Product {
     @Column(name = "discount", precision = 5, scale = 2)
     private BigDecimal discount;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JsonManagedReference
     private Collection<CartProduct> cartProducts;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

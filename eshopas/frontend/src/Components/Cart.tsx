@@ -32,7 +32,7 @@ const Cart = () => {
                 setProducts(response.data);
             } catch (err) {
                 if (!contr.signal.aborted) {
-                    setProducts([]); // set to empty array or null as fallback
+                    setProducts([]);
                     navigate("/");
                 }
             }
