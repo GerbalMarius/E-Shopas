@@ -56,6 +56,11 @@ public final class Product {
     @JsonBackReference
     private Manufacturer manufacturer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
+    private Bundle bundle;
+
     public String getPictureBase64() {
         if (this.picture != null) {
             return Base64.getEncoder().encodeToString(this.picture);
