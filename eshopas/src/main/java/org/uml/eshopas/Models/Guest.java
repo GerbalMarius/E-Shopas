@@ -12,19 +12,29 @@ public final class Guest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, name = "name")
+    @Column(name = "name")
     private String name;
 
-    @Column(nullable = false, name = "last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(nullable = false, name = "email", unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(nullable = false, name = "telephone_number")
+    @Column(name = "telephone_number")
     private String telephoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
+
+    public Guest() {}
+
+    public Guest(String name, String lastName, String email, String telephoneNumber, Cart cart) {
+        this.name = name;
+        this.lastName = lastName;
+        this.email = email;
+        this.telephoneNumber = telephoneNumber;
+        this.cart = cart;
+    }
 }
