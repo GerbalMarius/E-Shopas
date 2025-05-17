@@ -7,7 +7,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import {BACKEND_PREFIX, CartItem, ProductView} from "../App";
+import {BACKEND_PREFIX, CartItem} from "../App";
 import {useNavigate} from "react-router-dom";
 
 
@@ -271,8 +271,6 @@ const Order: React.FC = () => {
     const navigate = useNavigate();
 
     const [cartItems, setItems] = useState<CartItem[]>([])
-
-    const actualItems:CartItem[] = [];
 
     useEffect(() => {
         const contr = new AbortController();

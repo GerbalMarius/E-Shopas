@@ -106,6 +106,12 @@ public class CartController {
         val currCart = requestCurrentCart(15L); // change later
         List<CartItem> currItems = new ArrayList<>();
 
+        loadCartProducts(currCart, currItems);
+
+        return ResponseEntity.ok(currItems);
+    }
+
+    private static void loadCartProducts(Cart currCart, List<CartItem> currItems) {
         for (val item : currCart.getCartProducts()) {
             CartItem cartItem = new CartItem();
             Product product = item.getProduct();
@@ -115,8 +121,6 @@ public class CartController {
 
             currItems.add(cartItem);
         }
-
-        return ResponseEntity.ok(currItems);
     }
 
 }
