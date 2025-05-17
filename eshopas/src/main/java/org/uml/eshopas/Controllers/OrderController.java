@@ -25,7 +25,6 @@ import org.uml.eshopas.Repositories.CityRepository;
 import org.uml.eshopas.Repositories.GuestRepository;
 import org.uml.eshopas.Repositories.OrderRepository;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -138,12 +137,6 @@ public class OrderController {
         order.setCart(guest.getCart());
 
         orderRepository.save(order);
-
-        cart = new Cart();
-        cart.setTotalPrice(BigDecimal.valueOf(0));
-        cart.setGuest(guest);
-        guest.setCart(cart);
-        cartRepository.save(cart);
 
         System.out.println("Cart ID before saving order: " + guest.getCart().getId());
         System.out.println("Payment info received: " + details);
