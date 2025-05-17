@@ -47,6 +47,13 @@ public class ProductController {
         return cartController.tryAddProductToCart(cartRequest.getProductId(), cartRequest.getQuantity());
     }
 
+    @PostMapping("/remove-from-cart")
+    public ResponseEntity<?> removeProductFromCart(@RequestBody CartRequest cartRequest) {
+        System.out.println("Removing product ID " + cartRequest.getProductId() + "  Quantity " + cartRequest.getQuantity());
+
+        return cartController.tryRemoveProductFromCart(cartRequest.getProductId(), cartRequest.getQuantity());
+    }
+
     @GetMapping("/products")
     public ResponseEntity<List<ProductData>> getFilteredProducts(
             @RequestParam(required = false) BigDecimal minPrice,

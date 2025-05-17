@@ -42,11 +42,6 @@ public class CartController {
         this.guestRepository = guestRepository;
     }
 
-    public Cart addProductToCart(Long cartId, Long productId, int amount) {
-
-        return null;
-    }
-
     private Cart requestCurrentCart(Long Guest_id){
         Optional<Cart> currCart = cartRepository.findCartByGuest_id(Guest_id);
 
@@ -94,6 +89,15 @@ public class CartController {
             return ResponseEntity.ok(amount);
         }
 
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    public ResponseEntity<Integer> tryRemoveProductFromCart(Long productId, int amount) {
+        Cart cart = requestCurrentCart(15L);
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isPresent()) {
+
+        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
