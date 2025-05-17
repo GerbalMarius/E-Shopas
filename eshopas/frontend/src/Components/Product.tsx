@@ -11,9 +11,9 @@ interface Product {
     units: number;
     pictureBase64?: string;
     categoryId: number;
-    categoryName: string; // Pridėtas categoryName
+    categoryName: string;
     manufacturerId: number;
-    manufacturerName: string; // Pridėtas manufacturerName
+    manufacturerName: string;
     discount: number;
 }
 
@@ -100,7 +100,7 @@ const Product = () => {
                         style={{
                             fontSize: '14px',
                             padding: '6px 12px',
-                            width: 'auto', // prevent full width
+                            width: 'auto',
                             whiteSpace: 'nowrap',
                         }}
                         onClick={() => putProductInCart(product.id)}

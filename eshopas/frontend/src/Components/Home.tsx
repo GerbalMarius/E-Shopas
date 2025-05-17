@@ -18,8 +18,6 @@ const Home = () => {
     const toggle = () => setIsOpen(!isOpen);
     const navigate: NavigateFunction = useNavigate();
 
-    const [products, setProducts] = React.useState<ProductView[] | null>([]);
-
     useEffect(() => {
         const contr = new AbortController();
 
@@ -30,13 +28,10 @@ const Home = () => {
                     `${BACKEND_PREFIX}/api/product/products`,
                     { signal: contr.signal }
                 );
-                setProducts(response.data);
                 setFilteredProducts(response.data);  // Set filteredProducts to all products initially
             } catch (err) {
                 if (!contr.signal.aborted) {
-                    setProducts([]);
                     setFilteredProducts([]);
-                    navigate("/");
                 }
             }
         })();
@@ -66,7 +61,7 @@ const Home = () => {
     const filterProducts = async () => {
         const filters: Record<string, any> = {};
 
-        filters.minPrice = 0; // visada nuo 0
+        filters.minPrice = 0;
         if (maxPrice !== null) filters.maxPrice = maxPrice;
         if (categoryFilter) filters.category = categoryFilter;
         if (manufacturerFilter) filters.manufacturer = manufacturerFilter;

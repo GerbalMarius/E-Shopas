@@ -61,35 +61,13 @@ public class ProductController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String manufacturer
     ) {
-        List<Product> products = productRepository.findAll();
+        Long categoryId = (category != null) ? Long.parseLong(category) : null;
+        Long manufacturerId = (manufacturer != null) ? Long.parseLong(manufacturer) : null;
 
-        if (minPrice != null) {
-            products = products.stream()
-                    .filter(p -> p.getPrice().compareTo(minPrice) >= 0)
-                    .collect(Collectors.toList());
-        }
-
-        if (maxPrice != null) {
-            products = products.stream()
-                    .filter(p -> p.getPrice().compareTo(maxPrice) <= 0)
-                    .collect(Collectors.toList());
-        }
-
-        if (category != null) {
-            long categoryId = Long.parseLong(category);
-            products = products.stream().filter(p -> p.getCategory().getId() == categoryId).collect(Collectors.toList());
-        }
-
-        if (manufacturer != null) {
-            long manufacturerId = Long.parseLong(manufacturer);
-            products = products.stream().filter(p -> p.getManufacturer().getId() == manufacturerId).collect(Collectors.toList());
-        }
-
+        List<Product> products = productRepository.findFilteredProducts(minPrice, maxPrice, categoryId, manufacturerId);
         List<ProductData> productDataList = products.stream().map(ProductData::new).collect(Collectors.toList());
         return ResponseEntity.ok(productDataList);
     }
-
-
 
     @PostMapping("/add")
     public ResponseEntity<?> addProduct(@RequestParam("name") String name,
@@ -149,7 +127,7 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
         Product product = productOpt.get();
-        // Pridedame kategorijos ir gamintojo pavadinimus
+
         ProductData productData = new ProductData(product);
         productData.setCategoryName(product.getCategory().getTitle()); // Set category name
         productData.setManufacturerName(product.getManufacturer().getName()); // Set manufacturer name
