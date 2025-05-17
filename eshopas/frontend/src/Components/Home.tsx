@@ -32,7 +32,6 @@ const Home = () => {
             } catch (err) {
                 if (!contr.signal.aborted) {
                     setFilteredProducts([]);
-                    navigate("/");
                 }
             }
         })();
